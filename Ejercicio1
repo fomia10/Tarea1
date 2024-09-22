@@ -1,2 +1,726 @@
 # Tarea1
-https://colab.research.google.com/drive/1LMv93w8zTJhXL1wdaR1Ows7iEI6a90TS?usp=sharing/
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": []
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "code",
+      "execution_count": 27,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "bDGgno_xmUX2",
+        "outputId": "442ffba3-c350-4a27-9a99-8d9322ff13d7"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "resultado: [[19, 22], [43, 50]]\n"
+          ]
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "[[19, 22], [43, 50]]"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 27
+        }
+      ],
+      "source": [
+        "def mult(A, B):#multiplicacion de matriz\n",
+        "    # validar dimensiones para la multiplicacion\n",
+        "    if len(A[0]) != len(B):\n",
+        "        print(\"no se pueden multiplicar. dimensiones incompatibles\") # usar print en lugar de raise\n",
+        "        return []\n",
+        "\n",
+        "    #valores iniciales 0\n",
+        "    res = [[0 for _ in range(len(B[0]))] for _ in range(len(A))]\n",
+        "\n",
+        "    # iterar sobre las matrices y calcular la multiplicacion\n",
+        "    for i in range(len(A)):\n",
+        "        for j in range(len(B[0])):\n",
+        "            for k in range(len(B)):\n",
+        "                res[i][j] += A[i][k] * B[k][j]\n",
+        "                # sumar el producto de los elementos\n",
+        "\n",
+        "    print(\"resultado:\", res) # imprimir resultado\n",
+        "    return res\n",
+        "\n",
+        "# uso del programa\n",
+        "a = [[1, 2], [3, 4]] # matriz a\n",
+        "b = [[5, 6], [7, 8]] # matriz b\n",
+        "mult(a, b) # llamar a la funcion con a y b\n"
+      ]
+    },
+    {
+      "source": [
+        "def bloque_mult(a, b, bloque_sz):\n",
+        "    # validar dimensiones para multiplicar matrices\n",
+        "    if len(a[0]) != len(b):\n",
+        "        print(\"no se pueden multiplicar, dimensiones incompatibles\") # print en lugar de raise\n",
+        "        return []\n",
+        "\n",
+        "    n = len(a)\n",
+        "    m = len(b[0])\n",
+        "    res = [[0 for _ in range(m)] for _ in range(n)] # inicializa matriz de resultado con ceros\n",
+        "\n",
+        "    # multiplicacion por bloques\n",
+        "    for i in range(0, n, bloque_sz):\n",
+        "        for j in range(0, m, bloque_sz):\n",
+        "            for k in range(0, len(b), bloque_sz):\n",
+        "                # iterar dentro de los bloques\n",
+        "                for ii in range(i, min(i + bloque_sz, n)):\n",
+        "                    for jj in range(j, min(j + bloque_sz, m)):\n",
+        "                        for kk in range(k, min(k + bloque_sz, len(b))):\n",
+        "                            res[ii][jj] += a[ii][kk] * b[kk][jj] # sumar productos\n",
+        "\n",
+        "    print(\"resultado:\", res) # imprimir resultado\n",
+        "    return res\n",
+        "\n",
+        "# uso del programa\n",
+        "a = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]] # matriz a\n",
+        "b = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]] # matriz b\n",
+        "bloque_mult(a, b, 2) # llamar a la funcion con tamaño de bloque 2\n"
+      ],
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "5_RK_Co-mdk7",
+        "outputId": "a816111d-ce88-49b8-d606-b0feec0c862c"
+      },
+      "execution_count": 29,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "resultado: [[90, 100, 110, 120], [202, 228, 254, 280], [314, 356, 398, 440], [426, 484, 542, 600]]\n"
+          ]
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "[[90, 100, 110, 120],\n",
+              " [202, 228, 254, 280],\n",
+              " [314, 356, 398, 440],\n",
+              " [426, 484, 542, 600]]"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 29
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def trans(a):\n",
+        "    # inicializar una lista vacía para la matriz transpuesta\n",
+        "    tr = []\n",
+        "\n",
+        "    # recorrer columnas de la matriz original\n",
+        "    for i in range(len(a[0])):\n",
+        "        # crear una nueva fila para la matriz transpuesta\n",
+        "        new_row = []\n",
+        "\n",
+        "        # recorrer filas de la matriz original\n",
+        "        for j in range(len(a)):\n",
+        "            # añadir el elemento transpuesto a la nueva fila\n",
+        "            new_row.append(a[j][i])\n",
+        "\n",
+        "        # añadir la nueva fila a la matriz transpuesta\n",
+        "        tr.append(new_row)\n",
+        "\n",
+        "    print(\"matriz transpuesta:\", tr) # imprimir el resultado\n",
+        "    return tr\n",
+        "\n",
+        "# uso del programa\n",
+        "a = [[1, 2, 3], [4, 5, 6]] # matriz a\n",
+        "trans(a) # llamar a la funcion para transponer\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "sSZquudUmYyY",
+        "outputId": "ce1a3984-4047-4f51-b7d1-a9c0631b576e"
+      },
+      "execution_count": 45,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "matriz transpuesta: [[1, 4], [2, 5], [3, 6]]\n"
+          ]
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "[[1, 4], [2, 5], [3, 6]]"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 45
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def pote(mat, n):\n",
+        "    # verificar que la matriz sea cuadrada\n",
+        "    if len(mat) != len(mat[0]):\n",
+        "        print(\"la matriz debe ser cuadrada para la potencia\") # usar print en lugar de raise\n",
+        "        return []\n",
+        "\n",
+        "    # inicializar la matriz identidad\n",
+        "    res = [[1 if i == j else 0 for j in range(len(mat))] for i in range(len(mat))]\n",
+        "\n",
+        "    # calculo de la potencia de la matriz\n",
+        "    while n > 0:\n",
+        "        if n % 2 == 1:\n",
+        "            res = mult(res, mat) # multiplicar matrices usando la funcion previa mult\n",
+        "        mat = mult(mat, mat) # cuadrar la matriz\n",
+        "        n //= 2 # dividir n por 2\n",
+        "\n",
+        "    print(\"matriz elevada:\", res) # imprimir resultado\n",
+        "    return res\n",
+        "\n",
+        "# uso del programa\n",
+        "a = [[1, 2], [3, 4]] # matriz a\n",
+        "pote(a, 3) # llamar a la funcion con potencia 3\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "2fdnLmZsmha-",
+        "outputId": "42ccc564-b508-421a-d672-6f8ee3096142"
+      },
+      "execution_count": 33,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "resultado: [[1, 2], [3, 4]]\n",
+            "resultado: [[7, 10], [15, 22]]\n",
+            "resultado: [[37, 54], [81, 118]]\n",
+            "resultado: [[199, 290], [435, 634]]\n",
+            "matriz elevada: [[37, 54], [81, 118]]\n"
+          ]
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "[[37, 54], [81, 118]]"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 33
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def prodcruz(v1, v2):\n",
+        "    # verificar que los vectores sean de 3 dimensiones\n",
+        "    if len(v1) != 3 or len(v2) != 3:\n",
+        "        print(\"los vectores deben ser de 3 dimensiones para el producto cruz\") # usar print en lugar de raise\n",
+        "        return []\n",
+        "\n",
+        "    # calcular el producto cruz\n",
+        "    res = [\n",
+        "        v1[1] * v2[2] - v1[2] * v2[1],\n",
+        "        v1[2] * v2[0] - v1[0] * v2[2],\n",
+        "        v1[0] * v2[1] - v1[1] * v2[0]\n",
+        "    ]\n",
+        "\n",
+        "    print(\"producto cruz:\", res) # imprimir resultado\n",
+        "    return res\n",
+        "\n",
+        "# uso del programa\n",
+        "v1 = [1, 2, 3] # vector 1\n",
+        "v2 = [4, 5, 6] # vector 2\n",
+        "prodcruz(v1, v2) # llamar a la funcion\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "7v3ldvLwmill",
+        "outputId": "8cd2d4c7-94c9-4a3c-f742-fc0c0dce2857"
+      },
+      "execution_count": 34,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "producto cruz: [-3, 6, -3]\n"
+          ]
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "[-3, 6, -3]"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 34
+        }
+      ]
+    },
+    {
+      "source": [
+        "import math\n",
+        "\n",
+        "def rot_2d(vec, ang):\n",
+        "    # calcular coseno y seno del angulo\n",
+        "    cos_t = math.cos(ang)\n",
+        "    sin_t = math.sin(ang)\n",
+        "\n",
+        "    # definir la matriz de rotacion dentro del alcance de la funcion\n",
+        "    rot_mat = [\n",
+        "        [cos_t, -sin_t],\n",
+        "        [sin_t, cos_t]\n",
+        "    ]\n",
+        "\n",
+        "    # multiplicar el vector por la matriz de rotacion\n",
+        "    res = [\n",
+        "        rot_mat[0][0] * vec[0] + rot_mat[0][1] * vec[1],\n",
+        "        rot_mat[1][0] * vec[0] + rot_mat[1][1] * vec[1]\n",
+        "    ]\n",
+        "\n",
+        "    print(\"vector rotado:\", res) # imprimir resultado\n",
+        "    return res\n",
+        "\n",
+        "# uso del programa\n",
+        "v = [1, 0] # vector inicial\n",
+        "ang = math.pi / 4 # angulo de 45 grados\n",
+        "rot_2d(v, ang) # llamar a la funcion para rotar el vector\n"
+      ],
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "ZoAQU2n-mrFK",
+        "outputId": "fc8adaa6-e10e-4dd8-b926-147c16dd4715"
+      },
+      "execution_count": 35,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "vector rotado: [0.7071067811865476, 0.7071067811865475]\n"
+          ]
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "[0.7071067811865476, 0.7071067811865475]"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 35
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import math\n",
+        "\n",
+        "def rot_3d(vec, axs, ang):\n",
+        "    # calcular coseno y seno del angulo\n",
+        "    cos_t = math.cos(ang)\n",
+        "    sin_t = math.sin(ang)\n",
+        "    one_m_c = 1 - cos_t\n",
+        "\n",
+        "    # descomponer el eje en x, y, z\n",
+        "    x, y, z = axs\n",
+        "\n",
+        "    # definir la matriz de rotacion dentro de la funcion\n",
+        "    rot_mat = [\n",
+        "        [cos_t + x*x*one_m_c, x*y*one_m_c - z*sin_t, x*z*one_m_c + y*sin_t],\n",
+        "        [y*x*one_m_c + z*sin_t, cos_t + y*y*one_m_c, y*z*one_m_c - x*sin_t],\n",
+        "        [z*x*one_m_c - y*sin_t, z*y*one_m_c + x*sin_t, cos_t + z*z*one_m_c]\n",
+        "    ]\n",
+        "\n",
+        "    # multiplicar el vector por la matriz de rotacion\n",
+        "    res = [\n",
+        "        rot_mat[0][0] * vec[0] + rot_mat[0][1] * vec[1] + rot_mat[0][2] * vec[2],\n",
+        "        rot_mat[1][0] * vec[0] + rot_mat[1][1] * vec[1] + rot_mat[1][2] * vec[2],\n",
+        "        rot_mat[2][0] * vec[0] + rot_mat[2][1] * vec[1] + rot_mat[2][2] * vec[2]\n",
+        "    ]\n",
+        "\n",
+        "    print(\"vector rotado:\", res) # imprimir resultado\n",
+        "    return res\n",
+        "\n",
+        "# uso del programa\n",
+        "v = [1, 0, 0] # vector inicial\n",
+        "axs = [0, 0, 1] # eje de rotacion\n",
+        "ang = math.pi / 2 # angulo de 90 grados\n",
+        "rot_3d(v, axs, ang) # llamar a la funcion para rotar el vector\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "ubzGMe0immxO",
+        "outputId": "4a4b76c3-d911-4416-ebb8-c4c2268a042b"
+      },
+      "execution_count": 36,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "vector rotado: [6.123233995736766e-17, 1.0, 0.0]\n"
+          ]
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "[6.123233995736766e-17, 1.0, 0.0]"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 36
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def norm_1(mat):\n",
+        "    # inicializar una lista para las sumas de cada columna\n",
+        "    col_sums = []\n",
+        "\n",
+        "    # calcular la suma de valores absolutos de cada columna\n",
+        "    for j in range(len(mat[0])): # recorrer columnas\n",
+        "        col_sum = 0\n",
+        "        for i in range(len(mat)): # recorrer filas\n",
+        "            col_sum += abs(mat[i][j]) # sumar valor absoluto\n",
+        "        col_sums.append(col_sum) # agregar la suma de la columna a la lista\n",
+        "\n",
+        "    # encontrar el maximo de las sumas de columnas\n",
+        "    nrm = max(col_sums)\n",
+        "\n",
+        "    print(\"norma 1:\", nrm) # imprimir resultado\n",
+        "    return nrm\n",
+        "\n",
+        "# uso del programa\n",
+        "m = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] # matriz de ejemplo\n",
+        "norm_1(m) # llamar a la funcion\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "4oVt_Weqmv5Z",
+        "outputId": "88b1f798-a719-47dd-ffda-9ea1499f8451"
+      },
+      "execution_count": 38,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "norma 1: 18\n"
+          ]
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "18"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 38
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def norm_inf(mat):\n",
+        "    # inicializar una lista para las sumas de cada fila\n",
+        "    fila_sums = []\n",
+        "\n",
+        "    # calcular la suma de valores absolutos de cada fila\n",
+        "    for i in range(len(mat)): # recorrer filas\n",
+        "        fila_sum = 0\n",
+        "\n",
+        "        for j in range(len(mat[0])): # recorrer columnas\n",
+        "            fila_sum += abs(mat[i][j]) # sumar valor absoluto\n",
+        "        fila_sums.append(fila_sum) # agregar la suma de la fila a la lista\n",
+        "\n",
+        "    # encontrar el maximo de las sumas de filas\n",
+        "    nrm = max(fila_sums)\n",
+        "\n",
+        "    print(\"norma infinita:\", nrm) # imprimir resultado\n",
+        "    return nrm\n",
+        "\n",
+        "# uso del programa\n",
+        "m = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] # matriz de ejemplo\n",
+        "norm_inf(m) # llamar a la funcion\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "cVfzW1yym0no",
+        "outputId": "ca8e18a7-e300-470c-fc85-9d83a1647fb8"
+      },
+      "execution_count": 42,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "norma infinita: 24\n"
+          ]
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "24"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 42
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import math\n",
+        "\n",
+        "def norm_2(mat):\n",
+        "    # inicializar la suma de los cuadrados\n",
+        "    cua_sum = 0\n",
+        "\n",
+        "    # recorrer filas y columnas para sumar los cuadrados de los elementos\n",
+        "    for i in range(len(mat)): # recorrer filas\n",
+        "        for j in range(len(mat[0])): # recorrer columnas\n",
+        "            cua_sum += mat[i][j]**2 # sumar el cuadrado del elemento\n",
+        "\n",
+        "    # calcular la raiz cuadrada de la suma\n",
+        "    nrm = math.sqrt(cua_sum)\n",
+        "\n",
+        "    print(\"norma 2:\", nrm) # imprimir resultado\n",
+        "    return nrm\n",
+        "\n",
+        "# uso del programa\n",
+        "m = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] # matriz de ejemplo\n",
+        "norm_2(m) # llamar a la funcion\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "0yqc6cX6m6Vt",
+        "outputId": "049c6468-1211-407d-f1b8-944566cfbe30"
+      },
+      "execution_count": 43,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "norma 2: 16.881943016134134\n"
+          ]
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "16.881943016134134"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 43
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import numpy as np\n",
+        "\n",
+        "def resolver_sistema_dos_bandas(diag_principal, diag_banda, b, es_superior):\n",
+        "    # obtener la longitud de la diagonal principal\n",
+        "    n = len(diag_principal)\n",
+        "\n",
+        "    # crear copias de las diagonales para no modificar las entradas originales\n",
+        "    principal = diag_principal.copy()\n",
+        "    banda = diag_banda.copy()\n",
+        "    lado_derecho = b.copy()  # copiar b para evitar modificar el original\n",
+        "\n",
+        "    # crear vector de solución lleno de ceros\n",
+        "    solucion = np.zeros(n)\n",
+        "\n",
+        "    # caso de diagonal superior\n",
+        "    if es_superior:\n",
+        "        # eliminación hacia adelante\n",
+        "        for i in range(1, n):\n",
+        "            # calcular el factor de eliminación\n",
+        "            factor = banda[i-1] / principal[i-1]\n",
+        "            # actualizar la diagonal principal y el lado derecho\n",
+        "            principal[i] -= factor * banda[i-1]\n",
+        "            lado_derecho[i] -= factor * lado_derecho[i-1]\n",
+        "\n",
+        "        # sustitución hacia atrás para encontrar la solución\n",
+        "        solucion[-1] = lado_derecho[-1] / principal[-1]  # última posición\n",
+        "        for i in range(n-2, -1, -1):\n",
+        "            solucion[i] = (lado_derecho[i] - banda[i] * solucion[i+1]) / principal[i]\n",
+        "\n",
+        "    # caso de diagonal inferior\n",
+        "    else:\n",
+        "        # eliminación hacia adelante\n",
+        "        for i in range(1, n):\n",
+        "            # calcular el factor de eliminación\n",
+        "            factor = banda[i-1] / principal[i-1]\n",
+        "            # actualizar la diagonal principal y el lado derecho\n",
+        "            principal[i] -= factor * banda[i-1]\n",
+        "            lado_derecho[i] -= factor * lado_derecho[i-1]\n",
+        "\n",
+        "        # sustitución hacia adelante para encontrar la solución\n",
+        "        solucion[0] = lado_derecho[0] / principal[0]  # primera posición\n",
+        "        for i in range(1, n):\n",
+        "            solucion[i] = (lado_derecho[i] - banda[i-1] * solucion[i-1]) / principal[i]\n",
+        "\n",
+        "    # retornar el vector de solución\n",
+        "    return solucion\n",
+        "\n",
+        "# ejemplo de uso\n",
+        "\n",
+        "# caso de diagonal superior\n",
+        "diag_principal = np.array([2., 2., 2., 2.])\n",
+        "diag_banda = np.array([1., 1., 1.])\n",
+        "b = np.array([5., 5., 5., 5.])\n",
+        "print(\"Solución diagonal superior:\", resolver_sistema_dos_bandas(diag_principal, diag_banda, b, es_superior=True))\n",
+        "\n",
+        "# caso de diagonal inferior\n",
+        "diag_principal = np.array([2., 2., 2., 2.])\n",
+        "diag_banda = np.array([1., 1., 1.])\n",
+        "b = np.array([5., 5., 5., 5.])\n",
+        "print(\"Solución diagonal inferior:\", resolver_sistema_dos_bandas(diag_principal, diag_banda, b, es_superior=False))\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "_-HbZJS_vo8d",
+        "outputId": "abd15b2e-8d16-4d28-a67e-159a98595cb6"
+      },
+      "execution_count": 48,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Solución diagonal superior: [2. 1. 1. 2.]\n",
+            "Solución diagonal inferior: [2.50000000e+00 0.00000000e+00 2.50000000e+00 3.55271368e-16]\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import numpy as np\n",
+        "\n",
+        "def algoritmo_thomas_modificado(a, b, c, d):\n",
+        "    n = len(d)\n",
+        "\n",
+        "    # Eliminación hacia adelante\n",
+        "    for i in range(1, n):\n",
+        "        # calcular el multiplicador\n",
+        "        m = a[i] / b[i-1]\n",
+        "        # actualizar la diagonal principal\n",
+        "        b[i] = b[i] - m * c[i-1]\n",
+        "        # actualizar el lado derecho\n",
+        "        d[i] = d[i] - m * d[i-1]\n",
+        "\n",
+        "    # Sustitución hacia adelante (parte modificada)\n",
+        "    x = np.zeros(n)\n",
+        "    x[0] = d[0] / b[0]  # calcular el primer valor de la solución\n",
+        "    for i in range(1, n):\n",
+        "        # calcular el siguiente valor de la solución usando los valores anteriores\n",
+        "        x[i] = (d[i] - c[i-1] * x[i-1]) / b[i]\n",
+        "\n",
+        "    return x\n",
+        "\n",
+        "# Ejemplo de uso\n",
+        "a = np.array([0, 1, 1, 1])  # diagonal inferior\n",
+        "b = np.array([2, 2, 2, 2])  # diagonal principal\n",
+        "c = np.array([1, 1, 1, 0])  # diagonal superior\n",
+        "d = np.array([5, 5, 5, 5])  # lado derecho\n",
+        "\n",
+        "solucion = algoritmo_thomas_modificado(a, b, c, d)\n",
+        "print(\"Solución del algoritmo de Thomas modificado:\", solucion)\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "bszxxdBMxQp5",
+        "outputId": "6c648aa1-232f-4fed-dbcd-772dc673b6d2"
+      },
+      "execution_count": 49,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Solución del algoritmo de Thomas modificado: [ 2.5 -0.5  3.5 -1.5]\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "bZOxIdwV2S_D"
+      },
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
